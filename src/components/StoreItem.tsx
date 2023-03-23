@@ -11,8 +11,9 @@ import {
   Tooltip,
   IconButton,
   Button,
-  Text
+  Text,
 } from "@chakra-ui/react";
+import { useShoppingCart } from "../context/ShoppingCartContext";
 import { formatCurrency } from "../utils/formatCurrency";
 
 type StoreItemProps = {
@@ -25,8 +26,15 @@ type StoreItemProps = {
 const isNew: boolean = true;
 
 const StoreItem = ({ id, name, price, imgUrl }: StoreItemProps) => {
-  const quantity: number = 1
-  
+  const {
+    getItemQuantity,
+    increaseCartQuantity,
+    decreaseCartQuantity,
+    removeFromCart,
+  } = useShoppingCart();
+
+  const quantity = getItemQuantity(id);
+
   return (
     <Flex p={30} w="full" alignItems="center" justifyContent="center">
       <Box
@@ -94,9 +102,9 @@ const StoreItem = ({ id, name, price, imgUrl }: StoreItemProps) => {
                     <path
                       d="M1 1H3L3.4 3M5 11H15L19 3H3.4M5 11L3.4 3M5 11L2.70711 13.2929C2.07714 13.9229 2.52331 15 3.41421 15H15M15 15C13.8954 15 13 15.8954 13 17C13 18.1046 13.8954 19 15 19C16.1046 19 17 18.1046 17 17C17 15.8954 16.1046 15 15 15ZM7 17C7 18.1046 6.10457 19 5 19C3.89543 19 3 18.1046 3 17C3 15.8954 3.89543 15 5 15C6.10457 15 7 15.8954 7 17Z"
                       stroke="#111827"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                   </svg>
                 </IconButton>
@@ -111,20 +119,25 @@ const StoreItem = ({ id, name, price, imgUrl }: StoreItemProps) => {
             </Box>
           </Flex>
           <Box mt="16px">
-              {quantity === 0 ? (
-                <Button w="full" colorScheme='blue' leftIcon={<PlusSquareIcon />}>
-                  Add to Cart
-                </Button>
-              ) : (
-                <Flex direction="column" alignItems="center" gap="5px">
-                  <Flex alignItems="center" gap="16px">
-                    <Button colorScheme='blue'>-</Button>
-                    <Text fontSize='md'>{quantity.toString()} inCart</Text>
-                    <Button colorScheme='blue'>+</Button>
-                  </Flex>
-                  <Button colorScheme='red'>Remove</Button>
+            {quantity === 0 ? (
+              <Button
+                w="full"
+                colorScheme="blue"
+                leftIcon={<PlusSquareIcon />}
+                onClick={() => increaseCartQuantity(id)}
+              >
+                Add to Cart
+              </Button>
+            ) : (
+              <Flex direction="column" alignItems="center" gap="5px">
+                <Flex alignItems="center" gap="16px">
+                  <Button colorScheme="blue" onClick={() => decreaseCartQuantity(id)}>-</Button>
+                  <Text fontSize="md">{quantity.toString()} inCart</Text>
+                  <Button colorScheme="blue" onClick={() => increaseCartQuantity(id)}>+</Button>
                 </Flex>
-              ) }
+                <Button colorScheme="red" onClick={() => removeFromCart(id)}>Remove</Button>
+              </Flex>
+            )}
           </Box>
         </Box>
       </Box>

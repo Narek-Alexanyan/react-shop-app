@@ -4,11 +4,12 @@ import Home from "./pages/Home";
 import Store from "./pages/Store";
 import About from "./pages/About";
 import Navbar from "./components/Navbar";
+import { ShoppingCartProvider } from "./context/ShoppingCartContext";
 
 const App = () => {
   return (
-    <>
-    <Navbar />
+    <ShoppingCartProvider>
+      <Navbar />
       <Container maxW="8xl">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -16,7 +17,7 @@ const App = () => {
           <Route path="/about" element={<About />} />
         </Routes>
       </Container>
-    </>
+    </ShoppingCartProvider>
   );
 };
 
